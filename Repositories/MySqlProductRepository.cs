@@ -4,8 +4,11 @@ using MySql.Data.MySqlClient;
 namespace InventorySyetem1.Repositories;
 
 public class MySqlProductRepository : IProductRepository
+// java: implement interface
+// java: extend ParentObj
 {
     private readonly string _connectionString;
+    //constructor
     public MySqlProductRepository(string connectionString)
     {
         _connectionString = connectionString;
@@ -42,11 +45,75 @@ public class MySqlProductRepository : IProductRepository
 
     public List<Product> GetAllProducts()
     {
-        throw new NotImplementedException();
+        List<Product> products = new List<Product>();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Open();
+            string selectSql = "SELECT * FROM products";
+            // 1 box
+            // 2 dish
+            // 3 phone
+            using (MySqlCommand cmd = new MySqlCommand(selectSql, connection))
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                        // reader =  1 box -> reader = 2 dish -> reader = 3 phone
+                    {
+                        // 1.origin way
+                        // Product product = new Product(reader.GetInt32("id"),
+                        //     reader.GetString("name"),
+                        //     reader.GetDecimal("price"),
+                        //     reader.GetInt32("quantity"));
+                        // product.Status = (Product.ProductStatus)reader.GetInt32("status");
+                        // products.Add(product);
+                        
+                        // 2.obj initializer
+                        products.Add(new Product(reader.GetInt32("id"),
+                            reader.GetString("name"),
+                            reader.GetDecimal("price"),
+                            reader.GetInt32("quantity"))
+                        {
+                            Status = (Product.ProductStatus)reader.GetInt32("status")
+                        });
+                    }
+                }
+            }
+        }
+
+        return products;
     }
 
     public Product GetProductById(int id)
+    //id= or'1'='1'
     {
-        throw new NotImplementedException();
+        Product product = null;
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Open();
+            // string selectSql = "SELECT * FROM products WHERE id = " + id;
+            // gen by AI
+            string selectSql = "SELECT * FROM products WHERE id = @id" ;
+            using (MySqlCommand cmd = new MySqlCommand(selectSql, connection))
+            {
+                // 防止sql injection
+                cmd.Parameters.AddWithValue("@id", id);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        //object init
+                        //inline
+                        product = new Product(reader.GetInt32("id"), reader.GetString("name"),
+                            reader.GetDecimal("price"),
+                            reader.GetInt32("quantity"))
+                        {
+                            Status = (Product.ProductStatus)reader.GetInt32("status")
+                        };
+                    }
+                }
+            }
+        }
+        return product;
     }
 }
