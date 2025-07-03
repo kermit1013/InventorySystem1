@@ -98,6 +98,7 @@ public class MySqlProductRepository : IProductRepository
             {
                 // 防止sql injection
                 cmd.Parameters.AddWithValue("@id", id);
+                Console.WriteLine(cmd.CommandText);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
@@ -115,5 +116,25 @@ public class MySqlProductRepository : IProductRepository
             }
         }
         return product;
+    }
+
+    public void AddProduct(string? name, decimal price, int quantity)
+    {
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Open();
+            string insertSql = @"INSERT INTO products (name, price, quantity, status) 
+                                    values (@name, @price, @quantity, @status)" ;
+            using (MySqlCommand cmd = new MySqlCommand(insertSql, connection))
+            {
+                // 防止sql injection
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Parameters.AddWithValue("@price", price);
+                cmd.Parameters.AddWithValue("@quantity", quantity); 
+                //todo refactor
+                cmd.Parameters.AddWithValue("@status", 1);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
