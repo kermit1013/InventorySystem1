@@ -2,6 +2,7 @@
 
 using InventorySyetem1.Models;
 using InventorySyetem1.Repositories;
+using InventorySyetem1.Services;
 
 //Server: mysql所在伺服器位置（localhost or ip xxx.xxx.xxx.xxx）
 //Port: mysql端口（預設3306）
@@ -10,7 +11,9 @@ using InventorySyetem1.Repositories;
 //pwd: mysql使用者密碼
 const string MYSQL_CONNETION_STRING = "Server=localhost;Port=3306;Database=inventory_db;uid=root;pwd=kermitpassword;";
 
+// MySqlProductRepository mySqlProductRepository = new MySqlProductRepository(MYSQL_CONNETION_STRING);
 MySqlProductRepository productRepository = new MySqlProductRepository(MYSQL_CONNETION_STRING);
+InventoryService inventoryService = new InventoryService(productRepository);
 
 RunMenu();
 
@@ -48,18 +51,16 @@ void DisplayMenu()
 void GetAllProducts()
 {
     Console.WriteLine("\n--- 所有產品列表 ---");
-    var products = productRepository.GetAllProducts();
-    if (products.Any())
+    var products =  inventoryService.GetAllProducts();
+    // var products =  productRepository.GetAllProducts();
+    Console.WriteLine("-----------------------------------------------");
+    Console.WriteLine("ID | Name | Price | Quantity | Status");
+    Console.WriteLine("-----------------------------------------------");
+    foreach (var product in products)
     {
-        Console.WriteLine("-----------------------------------------------");
-        Console.WriteLine("ID | Name | Price | Quantity | Status");
-        Console.WriteLine("-----------------------------------------------");
-        foreach (var product in products)
-        {
-            Console.WriteLine(product);
-        }
-        Console.WriteLine("-----------------------------------------------");
+        Console.WriteLine(product);
     }
+    Console.WriteLine("-----------------------------------------------");
 }
 
 void SearchProduct()
@@ -145,4 +146,17 @@ decimal ReadDecimalLine(decimal defaultValue = 0.0m)
             Console.WriteLine("請輸入有效數字。");
         }
     }
+}
+
+void OOP()
+{
+    //實例化(new)
+    Cat moew = new Cat();
+    Dog bob = new Dog();
+    //一隻狗bob 一隻貓meow
+    
+    
+    Animal milk = new Cat();
+    Animal john = new Dog();
+    //兩隻動物 john(dog) milk(cat)
 }
