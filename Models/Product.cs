@@ -15,6 +15,7 @@ public class Product
     public ProductStatus Status { get; set; }
     
 
+    // mysqldata 套件需要
     public Product()
     {
     }

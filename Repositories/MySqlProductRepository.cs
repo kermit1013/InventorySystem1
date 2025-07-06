@@ -3,6 +3,8 @@ using MySql.Data.MySqlClient;
 
 namespace InventorySyetem1.Repositories;
 
+
+//MySqlProductRepository（掃地阿姨）：實作合約
 public class MySqlProductRepository : IProductRepository
 // java: implement interface
 // java: extend ParentObj
@@ -80,7 +82,6 @@ public class MySqlProductRepository : IProductRepository
                 }
             }
         }
-
         return products;
     }
 
@@ -136,5 +137,20 @@ public class MySqlProductRepository : IProductRepository
                 cmd.ExecuteNonQuery();
             }
         }
+    }
+
+    public void CleanKitchen()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CleanBathroom()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CleanFloor()
+    {
+        throw new NotImplementedException();
     }
 }

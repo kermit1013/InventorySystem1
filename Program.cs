@@ -3,6 +3,7 @@
 using InventorySyetem1.Models;
 using InventorySyetem1.Repositories;
 using InventorySyetem1.Services;
+using InventorySyetem1.Utils;
 
 //Server: mysql所在伺服器位置（localhost or ip xxx.xxx.xxx.xxx）
 //Port: mysql端口（預設3306）
@@ -11,12 +12,25 @@ using InventorySyetem1.Services;
 //pwd: mysql使用者密碼
 const string MYSQL_CONNETION_STRING = "Server=localhost;Port=3306;Database=inventory_db;uid=root;pwd=kermitpassword;";
 
-// MySqlProductRepository mySqlProductRepository = new MySqlProductRepository(MYSQL_CONNETION_STRING);
-MySqlProductRepository productRepository = new MySqlProductRepository(MYSQL_CONNETION_STRING);
-InventoryService inventoryService = new InventoryService(productRepository);
+//小明注入 打掃阿姨1 (mysql實作)
+MySqlProductRepository productRepo = new MySqlProductRepository(MYSQL_CONNETION_STRING);
+InventoryService inventoryService = new InventoryService(productRepo);
+
+// 通知功能相關
+// 使用EmailNotifier
+INotifier emailNotifier = new EmailNotifier();
+NotificationService emailService = new NotificationService(emailNotifier);
+// 使用SmsNotifier
+INotifier smsNotifier = new SmsNotifier();
+NotificationService smsService = new NotificationService(smsNotifier);
+
+//小明注入 打掃阿姨2 (mongo實作) 
+// MongoDBProductRepository mongoRepo = new MongoDBProductRepository();
+// InventoryService inventoryService = new InventoryService(mongoRepo);
+// inventoryService.GetAllProducts();
 
 RunMenu();
-
+//test
 void RunMenu()
 {
     while (true)
@@ -30,6 +44,8 @@ void RunMenu()
             case "2": SearchProduct();
                 break;
             case "3": AddProduct();
+                break;
+            case "4": UpdateProduct();
                 break;
             case "0": 
                 Console.WriteLine("Goodbye !");
@@ -45,6 +61,7 @@ void DisplayMenu()
     Console.WriteLine("1. 查看所有產品");
     Console.WriteLine("2. 查詢產品");
     Console.WriteLine("3. 新增產品");
+    Console.WriteLine("4. 更新產品");
     Console.WriteLine("0. 離開");
 }
 
@@ -61,13 +78,15 @@ void GetAllProducts()
         Console.WriteLine(product);
     }
     Console.WriteLine("-----------------------------------------------");
+  
+    emailService.NotifyUser("user", "查詢已完成");
 }
 
 void SearchProduct()
 {
     Console.WriteLine("輸入欲查詢的產品編號");
     int input = ReadIntLine(1);
-    var product = productRepository.GetProductById(input);
+    var product = productRepo.GetProductById(input);
     // string input = Console.ReadLine();
     // var product = productRepository.GetProductById(ReadInt(input));
     if (product != null)
@@ -88,7 +107,15 @@ void AddProduct()
     decimal price = ReadDecimalLine();
     Console.WriteLine("輸入產品數量：");
     int quantity = ReadIntLine();
-    productRepository.AddProduct(name, price, quantity);
+    productRepo.AddProduct(name, price, quantity);
+    smsService.NotifyUser("john", "新增產品成功");
+}
+
+
+void UpdateProduct()
+{
+    
+    throw new NotImplementedException();
 }
 
 int ReadInt(string input)
