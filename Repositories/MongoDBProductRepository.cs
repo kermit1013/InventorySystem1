@@ -4,6 +4,11 @@ namespace InventorySyetem1.Repositories;
 
 public class MongoDBProductRepository  : IProductRepository
 {
+    public void UpdateProduct(Product product)
+    {
+        throw new NotImplementedException();
+    }
+
     public MongoDBProductRepository()
     {
     }

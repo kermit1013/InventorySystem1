@@ -118,6 +118,26 @@ public class MySqlProductRepository : IProductRepository
         return product;
     }
 
+    public void UpdateProduct(Product product)
+    {
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Open();
+            string insertSql = @"UPDATE products SET name=@name, price=@price, quantity=@quantity, status=@status 
+                WHERE id=@id" ;
+            using (MySqlCommand cmd = new MySqlCommand(insertSql, connection))
+            {
+                // 防止sql injection
+                cmd.Parameters.AddWithValue("@id", product.Id);
+                cmd.Parameters.AddWithValue("@name", product.Name);
+                cmd.Parameters.AddWithValue("@price", product.Price);
+                cmd.Parameters.AddWithValue("@quantity", product.Quantity); 
+                cmd.Parameters.AddWithValue("@status", product.Status);
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+
     public void AddProduct(Product product)
     {
         using (var connection = new MySqlConnection(_connectionString))
@@ -128,6 +148,7 @@ public class MySqlProductRepository : IProductRepository
             using (MySqlCommand cmd = new MySqlCommand(insertSql, connection))
             {
                 // 防止sql injection
+                // cmd.Parameters.AddWithValue("@id", product.Id);
                 cmd.Parameters.AddWithValue("@name", product.Name);
                 cmd.Parameters.AddWithValue("@price", product.Price);
                 cmd.Parameters.AddWithValue("@quantity", product.Quantity); 

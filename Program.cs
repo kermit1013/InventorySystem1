@@ -4,6 +4,7 @@ using InventorySyetem1.Models;
 using InventorySyetem1.Repositories;
 using InventorySyetem1.Services;
 using InventorySyetem1.Utils;
+using ZstdSharp.Unsafe;
 
 //Server: mysql所在伺服器位置（localhost or ip xxx.xxx.xxx.xxx）
 //Port: mysql端口（預設3306）
@@ -113,8 +114,22 @@ void AddProduct()
 
 void UpdateProduct()
 {
+    Console.WriteLine("請輸入要更新的產品id");
+    int id = ReadIntLine();
+    //找到對應產品
+    var product = inventoryService.GetProductById(id);
+    if (product == null)
+    {
+        return;
+    }
+    Console.WriteLine("輸入產品名稱：");
+    string name = Console.ReadLine();
+    Console.WriteLine("輸入產品價格：");
+    decimal price = ReadDecimalLine();
+    Console.WriteLine("輸入產品數量：");
+    int quantity = ReadIntLine();
     
-    throw new NotImplementedException();
+    inventoryService.UpdateProduct(product, name, price, quantity);
 }
 
 int ReadInt(string input)
