@@ -86,9 +86,8 @@ void SearchProduct()
 {
     Console.WriteLine("輸入欲查詢的產品編號");
     int input = ReadIntLine(1);
-    var product = productRepo.GetProductById(input);
-    // string input = Console.ReadLine();
-    // var product = productRepository.GetProductById(ReadInt(input));
+    // var product = productRepo.GetProductById(input);
+    var product = inventoryService.GetProductById(input);
     if (product != null)
     {
         Console.WriteLine("-----------------------------------------------");
@@ -107,7 +106,7 @@ void AddProduct()
     decimal price = ReadDecimalLine();
     Console.WriteLine("輸入產品數量：");
     int quantity = ReadIntLine();
-    productRepo.AddProduct(name, price, quantity);
+    inventoryService.AddProduct(name, price, quantity);
     smsService.NotifyUser("john", "新增產品成功");
 }
 
@@ -173,17 +172,4 @@ decimal ReadDecimalLine(decimal defaultValue = 0.0m)
             Console.WriteLine("請輸入有效數字。");
         }
     }
-}
-
-void OOP()
-{
-    //實例化(new)
-    Cat moew = new Cat();
-    Dog bob = new Dog();
-    //一隻狗bob 一隻貓meow
-    
-    
-    Animal milk = new Cat();
-    Animal john = new Dog();
-    //兩隻動物 john(dog) milk(cat)
 }

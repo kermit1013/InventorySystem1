@@ -6,7 +6,7 @@ public interface IProductRepository
 {
     List<Product> GetAllProducts();
     Product GetProductById(int id);
-    void AddProduct(string? name, decimal price, int quantity);
+    void AddProduct(Product product);
     //合約內容如下：
     //打掃廚房
     void CleanKitchen();
@@ -16,4 +16,5 @@ public interface IProductRepository
     void CleanFloor();
     //洗衣服
     //共計三小時
+    int GetNextProductId();
 }
