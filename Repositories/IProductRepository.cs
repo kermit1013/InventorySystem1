@@ -17,6 +17,4 @@ public interface IProductRepository
     void CleanBathroom();
     //拖地
     void CleanFloor();
-    //洗衣服
-    //共計三小時
 }

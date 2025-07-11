@@ -12,9 +12,40 @@ using ZstdSharp.Unsafe;
 //uid: mysql使用者名稱
 //pwd: mysql使用者密碼
 const string MYSQL_CONNETION_STRING = "Server=localhost;Port=3306;Database=inventory_db;uid=root;pwd=kermitpassword;";
+string connectionString = "";
+string configFile = "appsettings.ini";
+
+if (File.Exists(configFile))
+{
+    Console.WriteLine($"Reading {configFile} file");
+    try
+    {
+        Dictionary<string, Dictionary<string, string>> config = ReadFile(configFile);
+        
+        if (config.ContainsKey("Database"))
+        {
+            var dbConfig = config["Database"];
+            connectionString=$"Server={dbConfig["Server"]};Port={dbConfig["Port"]};Database={dbConfig["Database"]};uid={dbConfig["Uid"]};pwd={dbConfig["Pwd"]};";
+            Console.WriteLine($"讀取資料庫連接字串成功！:{connectionString}");
+        }
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine($"錯誤：讀取配置檔案失敗：{e}");
+        // throw;
+        connectionString = MYSQL_CONNETION_STRING;
+    }
+}
+else
+{
+    Console.WriteLine($"錯誤：配置檔案 {configFile} 不存在");
+    connectionString = MYSQL_CONNETION_STRING;
+}
+
+
 
 //小明注入 打掃阿姨1 (mysql實作)
-MySqlProductRepository productRepo = new MySqlProductRepository(MYSQL_CONNETION_STRING);
+MySqlProductRepository productRepo = new MySqlProductRepository(connectionString);
 InventoryService inventoryService = new InventoryService(productRepo);
 
 // 通知功能相關
@@ -57,7 +88,7 @@ void RunMenu()
 
 void DisplayMenu()
 {
-    Console.WriteLine("Welcome to the inventory system!");
+    Console.WriteLine("歡迎使用InventorySyetem！");
     Console.WriteLine("What would you like to do?");
     Console.WriteLine("1. 查看所有產品");
     Console.WriteLine("2. 查詢產品");
@@ -70,7 +101,6 @@ void GetAllProducts()
 {
     Console.WriteLine("\n--- 所有產品列表 ---");
     var products =  inventoryService.GetAllProducts();
-    // var products =  productRepository.GetAllProducts();
     Console.WriteLine("-----------------------------------------------");
     Console.WriteLine("ID | Name | Price | Quantity | Status");
     Console.WriteLine("-----------------------------------------------");
@@ -132,19 +162,6 @@ void UpdateProduct()
     inventoryService.UpdateProduct(product, name, price, quantity);
 }
 
-int ReadInt(string input)
-{
-    try
-    {
-        return Convert.ToInt32(input);
-    }
-    catch (FormatException e)
-    {
-        Console.WriteLine("請輸入有效數字。");
-        return 0;
-    }
-}
-
 int ReadIntLine(int defaultValue = 0)
 {
     while (true)
@@ -160,10 +177,7 @@ int ReadIntLine(int defaultValue = 0)
         {
             return value;
         }
-        else
-        {
-            Console.WriteLine("請輸入有效數字。");
-        }
+        Console.WriteLine("請輸入有效數字。");
     }
 }
 
@@ -182,9 +196,36 @@ decimal ReadDecimalLine(decimal defaultValue = 0.0m)
         {
             return value;
         }
-        else
+        Console.WriteLine("請輸入有效數字。");
+    }
+}
+
+
+Dictionary<string, Dictionary<string, string>> ReadFile(string s)
+{
+    var config = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+    string currentSection = "";
+
+    foreach (string line in File.ReadLines(s))
+    {
+        string trimmedLine = line.Trim();
+        if (trimmedLine.StartsWith("#") || string.IsNullOrWhiteSpace(trimmedLine))
         {
-            Console.WriteLine("請輸入有效數字。");
+            continue; // 跳過註釋和空行
+        }
+
+        if (trimmedLine.StartsWith("[") && trimmedLine.EndsWith("]"))
+        {
+            currentSection = trimmedLine.Substring(1, trimmedLine.Length - 2);
+            config[currentSection] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
+        else if (currentSection != "" && trimmedLine.Contains("="))
+        {
+            int equalsIndex = trimmedLine.IndexOf('=');
+            string key = trimmedLine.Substring(0, equalsIndex).Trim();
+            string value = trimmedLine.Substring(equalsIndex + 1).Trim();
+            config[currentSection][key] = value;
         }
     }
+    return config;
 }

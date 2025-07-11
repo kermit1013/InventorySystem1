@@ -75,7 +75,6 @@ public class InventoryService
             }
             // 嘗試透過repo 新增產品
             var product = new Product(_productRepository.GetNextProductId(),name, price, quantity);
-            // var newProduct = new Product(name, price, quantity);
             _productRepository.AddProduct(product);
         }
         catch (Exception e)
