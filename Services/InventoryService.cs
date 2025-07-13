@@ -1,3 +1,4 @@
+using System.Collections;
 using InventorySyetem1.Models;
 using InventorySyetem1.Repositories;
 using InventorySyetem1.Utils;
@@ -144,4 +145,28 @@ public class InventoryService
         }
     }
 
+    public List<Product> SearchLowProduct()
+    {
+        try
+        {
+            List<Product> products = _productRepository.GetAllProducts();
+
+            var results = products
+                .Where(product => product.Quantity < 10 )
+                .Where(product => product.Status == Product.ProductStatus.LowStock)
+                .OrderBy(product => product.Name)
+                .ToList();
+            
+            if (!results.Any())
+            {
+                Console.WriteLine("No products found!");
+            }
+            return results;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"讀取產品列表失敗：{e.Message}");
+            return new List<Product>();
+        }
+    }
 }
