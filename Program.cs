@@ -73,11 +73,13 @@ void RunMenu()
         {
             case "1": GetAllProducts();
                 break;
-            case "2": SearchProduct();
+            case "2": SearchProductById();
                 break;
             case "3": AddProduct();
                 break;
             case "4": UpdateProduct();
+                break;
+            case "5": SearchProduct();
                 break;
             case "0": 
                 Console.WriteLine("Goodbye !");
@@ -91,9 +93,10 @@ void DisplayMenu()
     Console.WriteLine("歡迎使用InventorySyetem！");
     Console.WriteLine("What would you like to do?");
     Console.WriteLine("1. 查看所有產品");
-    Console.WriteLine("2. 查詢產品");
+    Console.WriteLine("2. 查詢產品ID");
     Console.WriteLine("3. 新增產品");
     Console.WriteLine("4. 更新產品");
+    Console.WriteLine("5. 查詢產品");
     Console.WriteLine("0. 離開");
 }
 
@@ -127,6 +130,25 @@ void SearchProduct()
         Console.WriteLine(product);
         Console.WriteLine("-----------------------------------------------");
     }
+}
+
+void SearchProduct()
+{
+   Console.WriteLine("查詢產品名稱關鍵字：");
+   string input = Console.ReadLine();
+   List<Product> products = inventoryService.SearchProduct(input);
+   if (products.Any())
+   {
+       Console.WriteLine($"-------------查詢條件為：（{input}）------------");
+       Console.WriteLine("-----------------------------------------------");
+       Console.WriteLine("ID | Name | Price | Quantity | Status");
+       Console.WriteLine("-----------------------------------------------");
+       foreach (var product in products)
+       {
+           Console.WriteLine(product);
+       }
+       Console.WriteLine("-----------------------------------------------");
+   }
 }
 
 void AddProduct()
