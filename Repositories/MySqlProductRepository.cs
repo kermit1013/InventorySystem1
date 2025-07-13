@@ -81,6 +81,60 @@ public class MySqlProductRepository : IProductRepository
         return products;
     }
 
+    public List<Product> GetAllOutOfStockProducts()
+    {
+        List<Product> products = new List<Product>();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Open();
+            string selectSql = "SELECT * FROM products WHERE status = 2";
+            using (MySqlCommand cmd = new MySqlCommand(selectSql, connection))
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        products.Add(new Product(reader.GetInt32("id"),
+                            reader.GetString("name"),
+                            reader.GetDecimal("price"),
+                            reader.GetInt32("quantity"))
+                        {
+                            Status = (Product.ProductStatus)reader.GetInt32("status")
+                        });
+                    }
+                }
+            }
+        }
+        return products;
+    }
+
+    public List<Product> GetLowProducts()
+    {
+        List<Product> products = new List<Product>();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Open();
+            string selectSql = "SELECT * FROM products WHERE status = 1";
+            using (MySqlCommand cmd = new MySqlCommand(selectSql, connection))
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        products.Add(new Product(reader.GetInt32("id"),
+                            reader.GetString("name"),
+                            reader.GetDecimal("price"),
+                            reader.GetInt32("quantity"))
+                        {
+                            Status = (Product.ProductStatus)reader.GetInt32("status")
+                        });
+                    }
+                }
+            }
+        }
+        return products;
+    }
+
     public Product GetProductById(int id)
     //id= or'1'='1'
     {

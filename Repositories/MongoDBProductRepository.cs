@@ -9,6 +9,16 @@ public class MongoDBProductRepository  : IProductRepository
         throw new NotImplementedException();
     }
 
+    public List<Product> GetLowProducts()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<Product> GetAllOutOfStockProducts()
+    {
+        throw new NotImplementedException();
+    }
+
     public MongoDBProductRepository()
     {
     }

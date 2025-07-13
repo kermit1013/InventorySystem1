@@ -149,7 +149,11 @@ public class InventoryService
     {
         try
         {
+            //區別為資料數量先存進記憶體
+            //1.
             List<Product> products = _productRepository.GetAllProducts();
+            //2.
+            //List<Product> lowProducts = _productRepository.GetLowProducts();
 
             var results = products
                 .Where(product => product.Quantity < 10 )
@@ -162,6 +166,25 @@ public class InventoryService
                 Console.WriteLine("No products found!");
             }
             return results;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"讀取產品列表失敗：{e.Message}");
+            return new List<Product>();
+        }
+    }
+
+    public List<Product> SearchOutOfStockProduct()
+    {
+        try
+        {
+            List<Product> outOfStocks = _productRepository.GetAllOutOfStockProducts();
+            
+            if (!outOfStocks.Any())
+            {
+                Console.WriteLine("No products found!");
+            }
+            return outOfStocks;
         }
         catch (Exception e)
         {
