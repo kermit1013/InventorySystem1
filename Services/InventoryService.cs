@@ -192,4 +192,20 @@ public class InventoryService
             return new List<Product>();
         }
     }
+
+    public void AdjustProductQuantity(Product product, int quantity)
+    {
+        int newQuantity = product.Quantity + quantity;
+        if (newQuantity < 0)
+        {
+            Console.WriteLine($"庫存不足，嘗試操作 出庫 {quantity}。");
+        } 
+
+        //update product 
+        product.Quantity = newQuantity;
+        product.UpdateStatus();
+        _productRepository.UpdateProduct(product);
+        
+        Console.WriteLine($"成功更新產品: {product.Name} ，當前庫存為 {newQuantity}");
+    }
 }
