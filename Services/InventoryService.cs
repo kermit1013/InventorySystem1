@@ -36,7 +36,7 @@ public class InventoryService
         }
     }
 
-    public Product GetProductById(int id)
+    public OperationResult<Product> GetProductById(int id)
     {
         try
         {
@@ -44,15 +44,14 @@ public class InventoryService
             Product product = _productRepository.GetProductById(id);
             if (product == null)
             {
-                Console.WriteLine("No products found!");
+                return OperationResult<Product>.ErrorResult("查無該產品"); ;
             }
-            return product;
+            return OperationResult<Product>.SuccessResult("操作成功", product); ;
             
         }
         catch (Exception e)
         {
-            Console.WriteLine($"讀取產品列表失敗：{e.Message}");
-            return new Product();
+            return OperationResult<Product>.ErrorResult($"讀取產品列表失敗：{e.Message}"); ;
         }
     }
 

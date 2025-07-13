@@ -130,13 +130,13 @@ void SearchProductById()
     Console.WriteLine("輸入欲查詢的產品編號");
     int input = ReadIntLine(1);
     // var product = productRepo.GetProductById(input);
-    var product = inventoryService.GetProductById(input);
+    OperationResult<Product> product = inventoryService.GetProductById(input);
     if (product != null)
     {
         Console.WriteLine("-----------------------------------------------");
         Console.WriteLine("ID | Name | Price | Quantity | Status");
         Console.WriteLine("-----------------------------------------------");
-        Console.WriteLine(product);
+        Console.WriteLine(product.Data);
         Console.WriteLine("-----------------------------------------------");
     }
 }
@@ -212,20 +212,20 @@ void UpdateProduct()
     Console.WriteLine("請輸入要更新的產品id");
     int id = ReadIntLine();
     //找到對應產品
-    var product = inventoryService.GetProductById(id);
-    if (product == null)
+    OperationResult<Product> product = inventoryService.GetProductById(id);
+    if (!product.Success)// 若為錯誤
     {
+        Console.WriteLine(product.Message);
         return;
     }
     Console.WriteLine("輸入產品名稱：");
     string name = Console.ReadLine();
     Console.WriteLine("輸入產品價格：");
     decimal price = ReadDecimalLine();
-    
     Console.WriteLine("輸入產品數量：");
     int quantity = ReadIntLine();
     
-    inventoryService.UpdateProduct(product, name, price, quantity);
+    inventoryService.UpdateProduct(product.Data, name, price, quantity);
 }
 
 void AdjustProductQuantity()
@@ -234,13 +234,14 @@ void AdjustProductQuantity()
     int id = ReadIntLine();
     //找到對應產品
     var product = inventoryService.GetProductById(id);
-    if (product == null)
+    if (!product.Success)// 若為錯誤
     {
+        Console.WriteLine(product.Message);
         return;
     }
     Console.WriteLine("輸入調整數量（正數入庫/負數出庫）：");
     int quantity = ReadIntLine();
-    inventoryService.AdjustProductQuantity(product, quantity);
+    inventoryService.AdjustProductQuantity(product.Data, quantity);
 }
 
 int ReadIntLine(int defaultValue = 0)
