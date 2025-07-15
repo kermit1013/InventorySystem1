@@ -130,13 +130,13 @@ void SearchProductById()
     Console.WriteLine("輸入欲查詢的產品編號");
     int input = ReadIntLine(1);
     // var product = productRepo.GetProductById(input);
-    OperationResult<Product> product = inventoryService.GetProductById(input);
-    if (product != null)
+    OperationResult<Product> result = inventoryService.GetProductById(input);
+    if (result != null)
     {
         Console.WriteLine("-----------------------------------------------");
         Console.WriteLine("ID | Name | Price | Quantity | Status");
         Console.WriteLine("-----------------------------------------------");
-        Console.WriteLine(product.Data);
+        Console.WriteLine(result.Data);
         Console.WriteLine("-----------------------------------------------");
     }
 }
@@ -145,14 +145,20 @@ void SearchProduct()
 {
    Console.WriteLine("查詢產品名稱關鍵字：");
    string input = Console.ReadLine();
-   List<Product> products = inventoryService.SearchProduct(input);
-   if (products.Any())
+   OperationResult<List<Product>> results = inventoryService.SearchProduct(input);
+   if (!results.Success)
+   {
+       Console.WriteLine(results.Message);
+   }
+   
+
+   if (results.Data.Any())
    {
        Console.WriteLine($"-------------查詢條件為：（{input}）------------");
        Console.WriteLine("-----------------------------------------------");
        Console.WriteLine("ID | Name | Price | Quantity | Status");
        Console.WriteLine("-----------------------------------------------");
-       foreach (var product in products)
+       foreach (var product in results.Data)
        {
            Console.WriteLine(product);
        }

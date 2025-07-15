@@ -7,7 +7,7 @@ public class OperationResult<T>
     public T Data { get; set; }
 
     //成功建構子
-    public OperationResult(string message, T data)
+    private OperationResult(string message, T data)
     {
         Success = true;
         Message = message;
@@ -15,7 +15,7 @@ public class OperationResult<T>
     }
     
     //失敗建構子
-    public OperationResult(string errorMessage)
+    private OperationResult(string errorMessage)
     {
         Success = false;
         Message = errorMessage;

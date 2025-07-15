@@ -44,7 +44,7 @@ public class InventoryService
             Product product = _productRepository.GetProductById(id);
             if (product == null)
             {
-                return OperationResult<Product>.ErrorResult("查無該產品"); ;
+                return OperationResult<Product>.ErrorResult("查無該產品");
             }
             return OperationResult<Product>.SuccessResult("操作成功", product); ;
             
@@ -74,7 +74,7 @@ public class InventoryService
                 throw new ArgumentException("數量不能小於零。");
             }
             // 嘗試透過repo 新增產品
-            var product = new Product(_productRepository.GetNextProductId(),name, price, quantity);
+            var product = new Product(_productRepository.GetNextProductId(), name, price, quantity);
             _productRepository.AddProduct(product);
         }
         catch (Exception e)
@@ -116,14 +116,14 @@ public class InventoryService
         }
     }
 
-    public List<Product> SearchProduct(string? input)
+    public OperationResult<List<Product>> SearchProduct(string? input)
     {
         try
         {
             List<Product> products = _productRepository.GetAllProducts();
             if (string.IsNullOrWhiteSpace(input))
             {
-                return products;
+                return OperationResult<List<Product>>.ErrorResult("請勿使用空字串");
             }
             
             var results = products
@@ -133,14 +133,13 @@ public class InventoryService
         
             if (!results.Any())
             {
-                Console.WriteLine("No products found!");
+                OperationResult<List<Product>>.ErrorResult("No products found!");
             }
-            return results;
+            return OperationResult<List<Product>>.SuccessResult("操作成功", results);
         }
         catch (Exception e)
         {
-            Console.WriteLine($"讀取產品列表失敗：{e.Message}");
-            return new List<Product>();
+            return OperationResult<List<Product>>.ErrorResult($"讀取產品列表失敗：{e.Message}");
         }
     }
 
