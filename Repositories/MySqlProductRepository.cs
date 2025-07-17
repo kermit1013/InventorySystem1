@@ -36,11 +36,11 @@ public class MySqlProductRepository : IProductRepository
                 {
                     cmd.ExecuteNonQuery();
                 }
-                Console.WriteLine("MySql初始化成功或已存在");
+                Console.WriteLine("[Product]MySql初始化成功或已存在");
             }
             catch (MySqlException e)
             {
-                Console.WriteLine($"初始化MySql失敗：{e.Message}");
+                Console.WriteLine($"[Product]初始化MySql失敗：{e.Message}");
             }
         }
     }
@@ -194,7 +194,7 @@ public class MySqlProductRepository : IProductRepository
         {
             connection.Open();
             string insertSql = @"INSERT INTO products (name, price, quantity, status) 
-                                    values (@name, @price, @quantity, @status)" ;
+                                    values (@name, @price, @quantity, @status)";
             using (MySqlCommand cmd = new MySqlCommand(insertSql, connection))
             {
                 // 防止sql injection

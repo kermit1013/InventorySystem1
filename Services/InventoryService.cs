@@ -9,6 +9,7 @@ public class InventoryService
 {
     // 1. 資料庫相關
     private readonly IProductRepository _productRepository;
+    
 
     //透過建構子,注入介面
     // InventoryService（小明） 需要IProductRepository 合約
@@ -152,7 +153,7 @@ public class InventoryService
             List<Product> products = _productRepository.GetAllProducts();
             //2.
             //List<Product> lowProducts = _productRepository.GetLowProducts();
-
+            //linq
             var results = products
                 .Where(product => product.Quantity < 10 )
                 .Where(product => product.Status == Product.ProductStatus.LowStock)

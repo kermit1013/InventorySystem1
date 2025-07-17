@@ -2,6 +2,7 @@ namespace InventorySyetem1.Models;
 
 public class Product
 {
+    // LOW_STOCK_QTY = appsettings.ini
     public enum ProductStatus
     {
         InStock, //有庫存 -0 
@@ -49,7 +50,7 @@ public class Product
         {
             Status = ProductStatus.OutOfStock;
         }
-        else if (Quantity < 10)
+        else if (Quantity <  10)
         {
             Status = ProductStatus.LowStock;
         }

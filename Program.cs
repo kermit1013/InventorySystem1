@@ -46,6 +46,8 @@ else
 
 //小明注入 打掃阿姨1 (mysql實作)
 MySqlProductRepository productRepo = new MySqlProductRepository(connectionString);
+MySqlSupplierRepository supplierRepo = new MySqlSupplierRepository(connectionString);
+
 InventoryService inventoryService = new InventoryService(productRepo);
 
 // 通知功能相關
@@ -87,8 +89,41 @@ void RunMenu()
                 break;
             case "8": AdjustProductQuantity();
                 break;
+            case "9": ManageSupplier();
+                break;
             case "0": 
                 Console.WriteLine("Goodbye !");
+                return;
+        }
+    }
+}
+
+void ManageSupplier()
+{
+    while (true)
+    {
+        Console.WriteLine("[供應商管理]");
+        Console.WriteLine("1. 查看所有供應商");
+        Console.WriteLine("2. 查詢供應商ID");
+        Console.WriteLine("3. 新增供應商");
+        Console.WriteLine("4. 更新供應商");
+        Console.WriteLine("5. 查詢供應商");
+        Console.WriteLine("0. 回到主選單");
+        
+        string input = Console.ReadLine();
+        switch (input)
+        {
+            case "1": 
+                break;
+            case "2": 
+                break;
+            case "3":
+                break;
+            case "4": 
+                break;
+            case "5": 
+                break;
+            case "0":
                 return;
         }
     }
@@ -106,6 +141,7 @@ void DisplayMenu()
     Console.WriteLine("6. 查詢庫存偏低");
     Console.WriteLine("7. 查詢已缺貨產品");
     Console.WriteLine("8. 調整產品庫存(出庫/入庫)");
+    Console.WriteLine("9. 管理供應商");
     Console.WriteLine("0. 離開");
 }
 
